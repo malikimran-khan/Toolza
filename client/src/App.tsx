@@ -4,6 +4,8 @@ import Navbar from './components/Navbar';
 import LandingPage from './pages/LandingPage';
 import DashboardPage from './pages/DashboardPage';
 import LinksPage from './pages/LinksPage';
+import ImageConvertPage from './pages/ImageConvertPage';
+import PdfToolsPage from './pages/PdfToolsPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
@@ -12,7 +14,14 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        {/* Short alias for URL Masking */}
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/tools/url-mask" element={<DashboardPage />} />
+        
+        {/* Media Tools */}
+        <Route path="/tools/image-convert" element={<ImageConvertPage />} />
+        <Route path="/tools/pdf-tools" element={<PdfToolsPage />} />
+        
         <Route path="/links" element={<LinksPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

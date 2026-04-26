@@ -1,14 +1,20 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Link2, Zap } from 'lucide-react';
+import { Menu, X, Zap, ChevronDown, Link2, Image as ImageIcon, FileText } from 'lucide-react';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [showTools, setShowTools] = useState(false);
   const location = useLocation();
 
+  const tools = [
+    { to: '/tools/url-mask', label: 'URL Masking', icon: Link2 },
+    { to: '/tools/image-convert', label: 'Image Converter', icon: ImageIcon },
+    { to: '/tools/pdf-tools', label: 'PDF & Word', icon: FileText },
+  ];
+
   const navLinks = [
-    { to: '/', label: 'Home' },
-    { to: '/dashboard', label: 'Dashboard' },
+    { to: '/', label: 'Overview' },
     { to: '/links', label: 'My Links' },
   ];
 
@@ -27,7 +33,40 @@ export default function Navbar() {
             </span>
           </Link>
 
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-10">
+            {/* Tools Dropdown */}
+            <div className="relative">
+              <button 
+                onMouseEnter={() => setShowTools(true)}
+                className="flex items-center gap-1 text-sm font-black text-gray-400 hover:text-black transition-colors"
+              >
+                Tools <ChevronDown className={`w-4 h-4 transition-transform ${showTools ? 'rotate-180' : ''}`} />
+              </button>
+              
+              {showTools && (
+                <div 
+                  onMouseLeave={() => setShowTools(false)}
+                  className="absolute top-full -left-4 w-56 pt-6 animate-fade-in"
+                >
+                  <div className="glass-card p-2 bg-white shadow-xl shadow-black/5">
+                    {tools.map((tool) => (
+                      <Link
+                        key={tool.to}
+                        to={tool.to}
+                        onClick={() => setShowTools(false)}
+                        className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-black transition-all ${
+                          isActive(tool.to) ? 'bg-primary/5 text-primary' : 'text-gray-400 hover:bg-gray-50 hover:text-black'
+                        }`}
+                      >
+                        <tool.icon className="w-4 h-4" />
+                        {tool.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
             {navLinks.map((link) => (
               <Link
                 key={link.to}
@@ -53,14 +92,29 @@ export default function Navbar() {
         </div>
       </div>
 
+      {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden bg-white border-b border-gray-50 p-6 space-y-4 animate-fade-in">
+        <div className="md:hidden bg-white border-b border-gray-50 p-6 space-y-4 animate-fade-in shadow-xl">
+          <div className="pb-4 border-b border-gray-50">
+            <p className="text-[10px] uppercase font-black text-gray-300 tracking-widest mb-4">Our Tools</p>
+            {tools.map((tool) => (
+              <Link
+                key={tool.to}
+                to={tool.to}
+                onClick={() => setIsOpen(false)}
+                className="flex items-center gap-3 py-3 text-lg font-black text-gray-400 active:text-primary"
+              >
+                <tool.icon className="w-5 h-5" />
+                {tool.label}
+              </Link>
+            ))}
+          </div>
           {navLinks.map((link) => (
             <Link
               key={link.to}
               to={link.to}
               onClick={() => setIsOpen(false)}
-              className={`block text-lg font-black ${isActive(link.to) ? 'text-primary' : 'text-gray-400'}`}
+              className="block text-lg font-black text-gray-400"
             >
               {link.label}
             </Link>
