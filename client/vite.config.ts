@@ -7,7 +7,11 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     proxy: {
-      '/api': {
+      '/api/links': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+      },
+      '/api/auth': {
         target: 'http://localhost:5000',
         changeOrigin: true,
       },
@@ -15,6 +19,14 @@ export default defineConfig({
         target: 'http://localhost:5000',
         changeOrigin: true,
       },
+      '/api/convert': {
+        target: 'http://localhost:5001',
+        changeOrigin: true,
+      },
+      '/api/pdf': {
+        target: 'http://localhost:5001',
+        changeOrigin: true,
+      }
     },
   },
 })
