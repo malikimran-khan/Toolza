@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const Link = require('../models/Link');
-const { optionalAuth } = require('../middleware/auth');
+const { protect } = require('../middleware/auth');
 
 // @route   POST /api/links
 // @desc    Create a new URL mapping
-// @access  Public (optionally authenticated)
-router.post('/', optionalAuth, async (req, res, next) => {
+// @access  Private
+router.post('/', protect, async (req, res, next) => {
+
   try {
     const { subdomain, originalUrl } = req.body;
 
@@ -48,16 +49,12 @@ router.post('/', optionalAuth, async (req, res, next) => {
 });
 
 // @route   GET /api/links
-// @desc    Get all links (optionally filtered by user)
-// @access  Public
-router.get('/', optionalAuth, async (req, res, next) => {
+// @desc    Get all links for the current user
+// @access  Private
+router.get('/', protect, async (req, res, next) => {
   try {
-    const query = {};
+    const query = { userId: req.user._id };
 
-    // If authenticated, optionally filter by user
-    if (req.user && req.query.mine === 'true') {
-      query.userId = req.user._id;
-    }
 
     const links = await Link.find(query).sort({ createdAt: -1 }).limit(100);
 

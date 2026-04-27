@@ -39,8 +39,7 @@ const linkSchema = new mongoose.Schema(
   }
 );
 
-// Index for fast subdomain lookups
-linkSchema.index({ subdomain: 1 });
+// Index for fast lookups (subdomain is already indexed by unique: true)
 linkSchema.index({ userId: 1 });
 
 // Virtual for generated URL

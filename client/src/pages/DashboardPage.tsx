@@ -1,13 +1,22 @@
 import { useState, useEffect } from 'react';
-import { LayoutDashboard, TrendingUp, Link2, Activity, Plus } from 'lucide-react';
+import { TrendingUp, Link2, Activity, Plus } from 'lucide-react';
 import toast from 'react-hot-toast';
 import LinkForm from '../components/LinkForm';
 import LinkTable from '../components/LinkTable';
 import { linkApi, type Link } from '../lib/api';
+import { useNavigate } from 'react-router-dom';
 
 export default function DashboardPage() {
   const [links, setLinks] = useState<Link[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!localStorage.getItem('toolza_token')) {
+      toast.error('Please sign in to access your dashboard');
+      navigate('/');
+    }
+  }, []);
 
   const fetchLinks = async () => {
     try {

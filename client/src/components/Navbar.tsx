@@ -1,11 +1,35 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Zap, ChevronDown, Link2, Image as ImageIcon, FileText } from 'lucide-react';
+import { Menu, X, Zap, ChevronDown, Link2, Image as ImageIcon, FileText, User as UserIcon, LogOut } from 'lucide-react';
+import AuthModal from './AuthModal';
+import { authApi } from '../lib/api';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [showTools, setShowTools] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [isAuth, setIsAuth] = useState(!!localStorage.getItem('toolza_token'));
   const location = useLocation();
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setIsAuth(!!localStorage.getItem('toolza_token'));
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  const handleLogout = () => {
+    authApi.logout();
+    setIsAuth(false);
+    window.location.reload(); // Hard refresh to clear all states
+  };
+
+  const handleAuthSuccess = () => {
+    setIsAuth(true);
+    setIsOpen(false);
+  };
+
 
   const tools = [
     { to: '/tools/url-mask', label: 'URL Masking', icon: Link2 },
@@ -78,12 +102,32 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <Link
-              to="/dashboard"
-              className="btn-primary px-6 py-3 rounded-xl text-xs active:scale-95"
-            >
-              Get Started
-            </Link>
+
+            {isAuth ? (
+              <div className="flex items-center gap-4">
+                <Link
+                  to="/dashboard"
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-50 text-black text-xs font-black hover:bg-gray-100 transition-all border border-gray-100"
+                >
+                  <UserIcon className="w-3.5 h-3.5" />
+                  Dashboard
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="p-2 rounded-xl text-gray-400 hover:text-primary hover:bg-primary/5 transition-all"
+                  title="Logout"
+                >
+                  <LogOut className="w-5 h-5" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowAuthModal(true)}
+                className="btn-primary px-6 py-3 rounded-xl text-xs active:scale-95"
+              >
+                Sign In
+              </button>
+            )}
           </div>
 
           <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-black transition-transform active:scale-90">
@@ -119,15 +163,40 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
-          <Link
-            to="/dashboard"
-            onClick={() => setIsOpen(false)}
-            className="btn-primary block w-full py-4 rounded-2xl text-center text-sm"
-          >
-            Get Started
-          </Link>
+          
+          {isAuth ? (
+             <div className="space-y-3 pt-4">
+               <Link
+                to="/dashboard"
+                onClick={() => setIsOpen(false)}
+                className="btn-primary block w-full py-4 rounded-2xl text-center text-sm"
+              >
+                Dashboard
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="w-full py-4 rounded-2xl border border-gray-100 text-gray-400 font-bold text-sm"
+              >
+                Logout
+              </button>
+             </div>
+          ) : (
+            <button
+              onClick={() => { setShowAuthModal(true); setIsOpen(false); }}
+              className="btn-primary block w-full py-4 rounded-2xl text-center text-sm"
+            >
+              Sign In
+            </button>
+          )}
         </div>
       )}
+
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={showAuthModal} 
+        onClose={() => setShowAuthModal(false)} 
+        onSuccess={handleAuthSuccess}
+      />
     </nav>
   );
 }

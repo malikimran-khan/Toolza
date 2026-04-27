@@ -21,6 +21,16 @@ export default function ImageConvertPage() {
   const handleConvert = async () => {
     if (!file) return;
 
+    // Check for authentication
+    const token = localStorage.getItem('toolza_token');
+    if (!token) {
+      toast.error('Account required. Please sign in to use this service.', {
+        icon: '🔒',
+        duration: 4000
+      });
+      return;
+    }
+
     setIsConverting(true);
     const formData = new FormData();
     formData.append('image', file);
@@ -29,14 +39,22 @@ export default function ImageConvertPage() {
     try {
       const response = await axios.post('/api/convert', formData, {
         responseType: 'blob',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
 
       const url = window.URL.createObjectURL(new Blob([response.data]));
       setResultUrl(url);
       toast.success('Converted successfully!');
-    } catch (error) {
-      console.error('Conversion failed:', error);
-      toast.error('Conversion failed. Please try again.');
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        toast.error('Session expired. Please log in again.');
+        localStorage.removeItem('toolza_token');
+      } else {
+        console.error('Conversion failed:', error);
+        toast.error('Conversion failed. Please try again.');
+      }
     } finally {
       setIsConverting(false);
     }

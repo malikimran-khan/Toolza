@@ -3,12 +3,22 @@ import { Link2, Search, RefreshCw } from 'lucide-react';
 import toast from 'react-hot-toast';
 import LinkTable from '../components/LinkTable';
 import { linkApi, type Link } from '../lib/api';
+import { useNavigate } from 'react-router-dom';
 
 export default function LinksPage() {
   const [links, setLinks] = useState<Link[]>([]);
   const [filteredLinks, setFilteredLinks] = useState<Link[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!localStorage.getItem('toolza_token')) {
+      toast.error('Please sign in to view your links');
+      navigate('/');
+    }
+  }, []);
+
 
   const fetchLinks = async () => {
     setIsLoading(true);
