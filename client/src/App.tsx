@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import Navbar from './components/Navbar';
 import LandingPage from './pages/LandingPage';
 import DashboardPage from './pages/DashboardPage';
@@ -8,9 +9,12 @@ import ImageConvertPage from './pages/ImageConvertPage';
 import PdfToolsPage from './pages/PdfToolsPage';
 import NotFoundPage from './pages/NotFoundPage';
 
+// Placeholder Google Client ID
+const GOOGLE_CLIENT_ID = "your_google_client_id_here.apps.googleusercontent.com";
+
 function App() {
   return (
-    <>
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <Navbar />
       <Routes>
         <Route path="/" element={<LandingPage />} />
@@ -39,8 +43,9 @@ function App() {
           },
         }}
       />
-    </>
+    </GoogleOAuthProvider>
   );
 }
+
 
 export default App;

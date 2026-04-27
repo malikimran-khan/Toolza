@@ -1,0 +1,17 @@
+{
+  "name": "toolza-root",
+  "version": "1.0.0",
+  "description": "Root management for Toolza microservices",
+  "scripts": {
+    "install-all": "npm install && (cd api-gateway && npm install) && (cd authentication && npm install) && (cd image-pdf-service && npm install) && (cd server && npm install) && (cd client && npm install)",
+    "start-gateway": "cd api-gateway && npm run dev",
+    "start-auth": "cd authentication && npm run dev",
+    "start-media": "cd image-pdf-service && npm run dev",
+    "start-server": "cd server && npm run dev",
+    "start-client": "cd client && npm run dev",
+    "start-all": "concurrently \"npm run start-gateway\" \"npm run start-auth\" \"npm run start-media\" \"npm run start-server\" \"npm run start-client\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

@@ -1,73 +1,58 @@
-# React + TypeScript + Vite
+# 🛠️ Toolza - Power Tools for the Web
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Toolza is a professional-grade, microservices-based platform offering high-performance web tools, including URL masking, PDF processing, and image conversion.
 
-Currently, two official plugins are available:
+## 🏗️ Architecture Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Toolza is split into specialized services to ensure scalability and security.
 
-## React Compiler
+| Service | Directory | Port | Responsibility |
+| :--- | :--- | :--- | :--- |
+| **API Gateway** | `/api-gateway` | `8000` | Entry point. Routes traffic to appropriate backends. |
+| **Authentication** | `/authentication`| `5002` | Handles user accounts, JWT, and Google OAuth. |
+| **Media Service** | `/image-pdf-service`| `5001` | Handles PDF-to-Word, Image Conversion, etc. |
+| **Main Server** | `/server` | `5000` | Core logic for URL Masking and Link management. |
+| **Frontend** | `/client` | `5173` | React/Vite dashboard and user interface. |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 🚀 Quick Start (Running Everything)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+You can launch the entire ecosystem with a single command from this root directory:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+1. **Install all dependencies:**
+   ```bash
+   npm run install-all
+   ```
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+2. **Start all services:**
+   ```bash
+   npm run start-all
+   ```
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## 📂 Project Structure
+
+```text
+Toolza/
+├── client/                 # React Frontend
+├── api-gateway/            # Centralized API Proxy
+├── authentication/         # User & OAuth Service
+├── image-pdf-service/      # Media Processing Engine
+└── server/                 # URL Masking & Core Logic
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🔐 Security Policy
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+All file processing and link creation services are protected by **JWT Authentication**. Users must have a valid account (Email or Google) to access these features.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 📄 Service Documentation
+
+For detailed information on a specific service, please refer to the README within its directory:
+
+- [API Gateway Readme](./api-gateway/README.md)
+- [Authentication Readme](./authentication/README.md)
+- [Media Service Readme](./image-pdf-service/README.md)
+- [Main Server Readme](./server/README.md)
+- [Frontend Readme](./client/README.md)

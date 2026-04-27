@@ -103,6 +103,14 @@ export const authApi = {
     return data;
   },
 
+  googleLogin: async (idToken: string): Promise<ApiResponse<AuthUser>> => {
+    const { data } = await api.post('/auth/google-login', { idToken });
+    if (data.data.token) {
+      localStorage.setItem('toolza_token', data.data.token);
+    }
+    return data;
+  },
+
   getMe: async (): Promise<ApiResponse<Omit<AuthUser, 'token'>>> => {
     const { data } = await api.get('/auth/me');
     return data;
