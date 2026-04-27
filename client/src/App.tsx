@@ -9,8 +9,9 @@ import ImageConvertPage from './pages/ImageConvertPage';
 import PdfToolsPage from './pages/PdfToolsPage';
 import NotFoundPage from './pages/NotFoundPage';
 
-// Placeholder Google Client ID
-const GOOGLE_CLIENT_ID = "your_google_client_id_here.apps.googleusercontent.com";
+// Google Client ID
+const GOOGLE_CLIENT_ID = "207600491295-lgusa9d9sslmbpu8nf51fq0spfs8q475.apps.googleusercontent.com";
+
 
 function App() {
   return (
